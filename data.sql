@@ -2,6 +2,8 @@
 
 DROP TABLE IF EXISTS invoices;
 DROP TABLE IF EXISTS companies;
+DROP TABLE IF EXISTS industries;
+DROP TABLE IF EXISTS companies_industries;
 
 CREATE TABLE companies (
     code text PRIMARY KEY,
@@ -28,3 +30,30 @@ INSERT INTO invoices (comp_Code, amt, paid, paid_date)
          ('apple', 200, false, null),
          ('apple', 300, true, '2018-01-01'),
          ('ibm', 400, false, null);
+
+-- Create the industries table
+CREATE TABLE industries (
+    code VARCHAR PRIMARY KEY,
+    industry VARCHAR NOT NULL
+);
+
+-- Create the companies_industries join table
+CREATE TABLE companies_industries (
+    company_code VARCHAR NOT NULL,
+    industry_code VARCHAR NOT NULL,
+    PRIMARY KEY (company_code, industry_code),
+    FOREIGN KEY (company_code) REFERENCES companies (code) ON DELETE CASCADE,
+    FOREIGN KEY (industry_code) REFERENCES industries (code) ON DELETE CASCADE
+);
+
+-- Insert sample industries
+INSERT INTO industries (code, industry) VALUES
+('acct', 'Accounting'),
+('tech', 'Technology'),
+('fin', 'Finance'),
+('heal', 'Healthcare');
+
+-- Insert some associations between companies and industries
+INSERT INTO companies_industries (company_code, industry_code) VALUES
+('apple', 'tech'),
+('ibm', 'tech');
